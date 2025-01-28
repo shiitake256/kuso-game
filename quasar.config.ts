@@ -1,7 +1,13 @@
 // Configuration for your app
 // https://v2.quasar.dev/quasar-cli-vite/quasar-config-file
 
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
+
 import { defineConfig } from '#q-app/wrappers';
+import { viteStaticCopy } from 'vite-plugin-static-copy';
+import { normalizePath } from 'vite'
+import path from 'node:path'
 
 export default defineConfig((/* ctx */) => {
   return {
@@ -74,7 +80,17 @@ export default defineConfig((/* ctx */) => {
             lintCommand: 'eslint -c ./eslint.config.js "./src*/**/*.{ts,js,mjs,cjs,vue}"',
             useFlatConfig: true
           }
-        }, { server: false }]
+        }, { server: false }],
+        [
+          viteStaticCopy, {
+            targets: [
+              {
+                src: 'dist/spa/*',
+                dest: normalizePath(path.resolve(__dirname, './docs'))
+              }
+            ]
+          }
+        ]
       ]
     },
 
