@@ -1,6 +1,6 @@
 <!-- src/components/GameGrid.vue -->
 <template>
-  <div>
+  <div class="game-container">
     <h1>Simple Roguelike Game</h1>
     <div id="game" class="game-grid">{{ gridDisplay }}</div>
     <p>Controls: W (Up), A (Left), S (Down), D (Right)</p>
@@ -126,6 +126,9 @@ export default defineComponent({
 </script>
 
 <style scoped>
+.game-container {
+  text-align: center;
+}
 .game-grid {
   display: inline-block;
   margin: 20px auto;
@@ -134,5 +137,8 @@ export default defineComponent({
   background-color: #f0f0f0;
   padding: 10px;
   border: 1px solid #ccc;
+  max-width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
 }
 </style>
