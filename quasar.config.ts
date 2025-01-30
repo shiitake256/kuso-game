@@ -99,17 +99,19 @@ export default defineConfig((/* ctx */) => {
         [
           viteStaticCopy, {
             targets: (() => {
-              if (gitTag === '') {
+              if (gitTag !== '') {
                 return [
                   {
                     src: 'dist/spa/*',
-                    dest: normalizePath(path.resolve(__dirname, './docs'))
+                    dest: normalizePath(path.resolve(__dirname, './docs/latest'))
                   },
                   {
                     src: 'dist/spa/*',
                     dest: normalizePath(path.resolve(__dirname, `./docs/${gitTag}`))
                   }
                 ]
+              } else {
+                return []
               }
             })()
           }
