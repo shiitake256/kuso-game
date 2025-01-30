@@ -8,6 +8,17 @@ import { defineConfig } from '#q-app/wrappers';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
 import { normalizePath } from 'vite'
 import path from 'node:path'
+import { execSync } from 'child_process';
+
+// gitのタグ名を取得
+let gitTag = '';
+try {
+  gitTag = execSync('git describe --tags').toString().trim();
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+} catch (e) {
+  // Error ignored
+}
 
 export default defineConfig((/* ctx */) => {
   return {
@@ -70,6 +81,10 @@ export default defineConfig((/* ctx */) => {
 
       extendViteConf(viteConf) {
         viteConf.base = "";
+        // 環境変数としてgitのタグ名を設定
+        // viteConf.define = {
+        //   'process.env.GIT_TAG': JSON.stringify(gitTag)
+        // };
       },
       // viteVuePluginOptions: {},
 
@@ -83,12 +98,20 @@ export default defineConfig((/* ctx */) => {
         }, { server: false }],
         [
           viteStaticCopy, {
-            targets: [
-              {
-                src: 'dist/spa/*',
-                dest: normalizePath(path.resolve(__dirname, './docs'))
+            targets: (() => {
+              if (gitTag === '') {
+                return [
+                  {
+                    src: 'dist/spa/*',
+                    dest: normalizePath(path.resolve(__dirname, './docs'))
+                  },
+                  {
+                    src: 'dist/spa/*',
+                    dest: normalizePath(path.resolve(__dirname, `./docs/${gitTag}`))
+                  }
+                ]
               }
-            ]
+            })()
           }
         ]
       ]
