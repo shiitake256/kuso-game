@@ -1,7 +1,16 @@
 <!-- src/components/GameGrid.vue -->
 <template>
   <div class="game-container">
-    <h1>Simple Roguelike Game</h1>
+    <h1>Ethereal Chronicles: The Veil of Arcane Eternity</h1>
+    <div>
+      <img
+        src="~/assets/game-title-logo.webp"
+        alt="Game Logo"
+        class="game-logo"
+        style="width: 20rem"
+      />
+    </div>
+
     <div id="game" class="game-grid">{{ gridDisplay }}</div>
     <p>Controls: W (Up), A (Left), S (Down), D (Right)</p>
   </div>
@@ -128,6 +137,8 @@ export default defineComponent({
 <style scoped>
 .game-container {
   text-align: center;
+  justify-content: center;
+  flex-direction: column;
 }
 .game-grid {
   display: inline-block;
