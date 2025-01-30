@@ -13,7 +13,7 @@ import { execSync } from 'child_process';
 // gitのタグ名を取得
 let gitTag = '';
 try {
-  gitTag = execSync('git describe --tags').toString().trim();
+  gitTag = execSync('git describe --tags --abbrev=0').toString().trim();
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
 } catch (e) {
