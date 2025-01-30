@@ -27,8 +27,14 @@ body {
 
 .header-title {
   font-size: $header-title-font-size;
-  color: $header-title-color;
-  text-shadow: $header-title-text-shadow;
+  color: #ffcc00; // フォントカラーを変更
+  text-shadow:
+    3px 3px 6px rgba(255, 255, 255, 0.9),
+    // 影の色を変更
+    0 0 15px rgba(255, 204, 0, 0.7); // シャドウの色を変更
+  font-family: 'Cinzel', serif; // フォントファミリーを変更
+  letter-spacing: 0.1rem; // 文字間隔を調整
+  text-transform: uppercase; // 大文字に変換
 }
 
 // Styles for GameGrid component

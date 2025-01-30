@@ -1,7 +1,7 @@
 <!-- src/components/GameGrid.vue -->
 <template>
   <div class="game-container">
-    <h1>Ethereal Chronicles: The Veil of Arcane Eternity</h1>
+    <h1 class="header-title">Ethereal Chronicles: The Veil of Arcane Eternity</h1>
     <div>
       <img
         src="~/assets/game-title-logo.webp"
