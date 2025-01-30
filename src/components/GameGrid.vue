@@ -20,7 +20,7 @@
 import { defineComponent, ref, onMounted, computed } from 'vue'
 // import { logger } from 'workbox-core/_private'
 
-const GRID_SIZE = 10
+const GRID_SIZE = 50
 
 class Player {
   x: number
@@ -133,23 +133,3 @@ export default defineComponent({
   },
 })
 </script>
-
-<style scoped>
-.game-container {
-  text-align: center;
-  justify-content: center;
-  flex-direction: column;
-}
-.game-grid {
-  display: inline-block;
-  margin: 20px auto;
-  font-family: monospace;
-  white-space: pre;
-  background-color: #f0f0f0;
-  padding: 10px;
-  border: 1px solid #ccc;
-  max-width: fit-content;
-  margin-left: auto;
-  margin-right: auto;
-}
-</style>
