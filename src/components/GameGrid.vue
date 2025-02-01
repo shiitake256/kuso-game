@@ -84,9 +84,11 @@ export default defineComponent({
         }
       }
 
-      // プレイヤーを内側に配置
-      player.x = VIEWPORT_SIZE
-      player.y = VIEWPORT_SIZE
+      // プレイヤーをランダムな位置に配置
+      const randomX = Math.floor(Math.random() * ACTUAL_PLAY_AREA)
+      const randomY = Math.floor(Math.random() * ACTUAL_PLAY_AREA)
+      player.x = randomX + VIEWPORT_SIZE
+      player.y = randomY + VIEWPORT_SIZE
       grid.value[player.x]![player.y] = '😀'
 
       enemies.value = generateEnemies()
