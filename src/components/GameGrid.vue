@@ -12,7 +12,9 @@
     </div>
 
     <div id="game" class="game-grid">
-      <span v-for="(cell, cellIndex) in grid.flat()" :key="cellIndex" class="cell">{{ cell }}</span>
+      <span v-for="(cell, cellIndex) in grid.flat()" :key="cellIndex" class="cell">{{
+        getEmoji(cell)
+      }}</span>
     </div>
     <p>Controls: W (Up), A (Left), S (Down), D (Right)</p>
   </div>
@@ -69,12 +71,21 @@ export default defineComponent({
     }
 
     const initializeGrid = () => {
-      grid.value = Array.from({ length: GRID_SIZE }, () => Array(GRID_SIZE).fill('.'))
+      grid.value = Array.from({ length: GRID_SIZE }, () => Array(GRID_SIZE).fill('⬛'))
       grid.value[player.x]![player.y] = 'P'
       enemies.value = generateEnemies()
       for (const enemy of enemies.value) {
         grid.value[enemy.x]![enemy.y] = 'E'
       }
+    }
+
+    const getEmoji = (content: string) => {
+      const emojiMap: { [key: string]: string } = {
+        P: '😀',
+        E: '👾',
+        '.': '⬛',
+      }
+      return emojiMap[content] || content
     }
 
     const displayGrid = computed(() => {
@@ -131,7 +142,7 @@ export default defineComponent({
     return {
       gridDisplay: displayGrid,
       grid,
-      // gridDisplay: 'asdf',
+      getEmoji,
     }
   },
 })
@@ -151,8 +162,8 @@ export default defineComponent({
   padding: 20px;
   border-radius: 8px;
   display: grid; /* グリッドレイアウト */
-  grid-template-columns: repeat(50, 2ch); /* 幅を1chで固定 */
-  grid-template-rows: repeat(50, 2ch); /* 高さも1chで固定 */
+  grid-template-columns: repeat(50, 2.5ch); /* 幅を1chで固定 */
+  grid-template-rows: repeat(50, 2.5ch); /* 高さも1chで固定 */
   margin: 20px auto;
   font-family: monospace;
   white-space: pre;
@@ -175,5 +186,11 @@ export default defineComponent({
   padding: 10px;
   margin: 10px;
   border-radius: 4px;
+}
+
+.cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 </style>
