@@ -133,3 +133,35 @@ export default defineComponent({
   },
 })
 </script>
+
+<style scoped>
+.game-container {
+  text-align: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.game-grid {
+  background-color: #1d1d1d; /* ダーク背景色 */
+  color: #e0e0e0; /* 明るいテキスト色 */
+  border: 1px solid #333; /* ダークボーダー */
+  padding: 20px;
+  border-radius: 8px;
+  display: inline-block;
+  margin: 20px auto;
+  font-family: monospace;
+  white-space: pre;
+  max-width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.game-grid-item {
+  background-color: #2c2c2c; /* アイテムのダーク背景色 */
+  color: #e0e0e0; /* アイテムの明るいテキスト色 */
+  border: 1px solid #444; /* アイテムのダークボーダー */
+  padding: 10px;
+  margin: 10px;
+  border-radius: 4px;
+}
+</style>
