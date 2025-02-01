@@ -24,7 +24,10 @@
 import { defineComponent, ref, onMounted, computed } from 'vue'
 // import { logger } from 'workbox-core/_private'
 
-const GRID_SIZE = 50
+const VIEWPORT_SIZE = 15  // 表示するグリッドのサイズイズ
+const GRID_SIZE = 50 + (VIEWPORT_SIZE * 2)  // マップサを拡大して壁の厚さを確保
+const WALL = '🧱'  // 壁のエモジを追加
+const ACTUAL_PLAY_AREA = 50  // 実際のプレイ可能エリア
 
 class Player {
   x: number
@@ -63,19 +66,36 @@ export default defineComponent({
     const generateEnemies = () => {
       const enemiesArray: Enemy[] = []
       for (let i = 0; i < 5; i++) {
-        const x = Math.floor(Math.random() * GRID_SIZE)
-        const y = Math.floor(Math.random() * GRID_SIZE)
+        const x = Math.floor(Math.random() * ACTUAL_PLAY_AREA)
+        const y = Math.floor(Math.random() * ACTUAL_PLAY_AREA)
         enemiesArray.push(new Enemy(x, y))
       }
       return enemiesArray
     }
 
     const initializeGrid = () => {
-      grid.value = Array.from({ length: GRID_SIZE }, () => Array(GRID_SIZE).fill('⬛'))
+      // まず全てのセルを壁で初期化
+      grid.value = Array.from({ length: GRID_SIZE }, () => Array(GRID_SIZE).fill(WALL))
+      
+      // プレイ可能エリアを作成（内側を空白に）
+      for (let i = VIEWPORT_SIZE; i < VIEWPORT_SIZE + ACTUAL_PLAY_AREA; i++) {
+        for (let j = VIEWPORT_SIZE; j < VIEWPORT_SIZE + ACTUAL_PLAY_AREA; j++) {
+          grid.value[i]![j] = '⬛'
+        }
+      }
+
+      // プレイヤーを内側に配置
+      player.x = VIEWPORT_SIZE
+      player.y = VIEWPORT_SIZE
       grid.value[player.x]![player.y] = '😀'
+
       enemies.value = generateEnemies()
       for (const enemy of enemies.value) {
-        grid.value[enemy.x]![enemy.y] = '👾'
+        const x = enemy.x + VIEWPORT_SIZE
+        const y = enemy.y + VIEWPORT_SIZE
+        if (grid.value[x]![y] === '⬛') {
+          grid.value[x]![y] = '👾'
+        }
       }
     }
 
@@ -85,15 +105,35 @@ export default defineComponent({
       return grid.value.map((row) => row.join(' ')).join('\n')
     })
 
+    const viewportGrid = computed(() => {
+      // プレイヤーを常に中心に表示
+      const startX = player.x - Math.floor(VIEWPORT_SIZE / 2)
+      const startY = player.y - Math.floor(VIEWPORT_SIZE / 2)
+      
+      const viewport: string[][] = []
+      for (let i = 0; i < VIEWPORT_SIZE; i++) {
+        viewport[i] = []
+        for (let j = 0; j < VIEWPORT_SIZE; j++) {
+          const gridX = startX + i
+          const gridY = startY + j
+          viewport[i]![j] = grid.value[gridX]?.[gridY] ?? WALL
+        }
+      }
+      return viewport
+    })
+
     const movePlayer = (dx: number, dy: number) => {
+      const newX = player.x + dx
+      const newY = player.y + dy
+
+      // 壁との衝突判定
+      if (grid.value[newX]?.[newY] === WALL) {
+        return  // 壁があれば移動をキャンセル
+      }
+
       grid.value[player.x]![player.y] = '⬛'
       player.move(dx, dy)
-
-      if (player.x < 0) player.x = 0
-      if (player.y < 0) player.y = 0
-      if (player.x >= GRID_SIZE) player.x = GRID_SIZE - 1
-      if (player.y >= GRID_SIZE) player.y = GRID_SIZE - 1
-
+      
       if (grid.value[player.x]![player.y] === '👾') {
         alert('You encountered an enemy!')
         player.hp -= 1
@@ -132,7 +172,7 @@ export default defineComponent({
 
     return {
       gridDisplay: displayGrid,
-      grid,
+      grid: viewportGrid,
     }
   },
 })
@@ -152,8 +192,8 @@ export default defineComponent({
   padding: 20px;
   border-radius: 8px;
   display: grid; /* グリッドレイアウト */
-  grid-template-columns: repeat(50, 2.5ch); /* 幅を1chで固定 */
-  grid-template-rows: repeat(50, 2.5ch); /* 高さも1chで固定 */
+  grid-template-columns: repeat(15, 2.5ch); /* 50から15に変更 */
+  grid-template-rows: repeat(15, 2.5ch); /* 50から15に変更 */
   margin: 20px auto;
   font-family: monospace;
   white-space: pre;
