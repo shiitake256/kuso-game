@@ -16,6 +16,18 @@
         cell
       }}</span>
     </div>
+    <div class="game-log">
+      <h3>ゲームログ</h3>
+      <div class="log-area">
+        <div class="player-status">
+          <div class="player-emoji">😀</div>
+          <div class="player-hp">HP: {{ player.hp }}/10</div>
+        </div>
+        <div class="log-content">
+          <p v-for="(message, index) in gameLog" :key="index">{{ message }}</p>
+        </div>
+      </div>
+    </div>
     <p>Controls: K (Up), H (Left), J (Down), L (Right)</p>
   </div>
 </template>
@@ -62,6 +74,7 @@ export default defineComponent({
     const grid = ref<string[][]>([])
     const player = new Player(0, 0)
     const enemies = ref<Enemy[]>([])
+    const gameLog = ref<string[]>([])
 
     const generateEnemies = () => {
       const enemiesArray: Enemy[] = []
@@ -124,22 +137,30 @@ export default defineComponent({
       return viewport
     })
 
+    const addLogMessage = (message: string) => {
+      gameLog.value.push(message)
+      if (gameLog.value.length > 5) {
+        gameLog.value.shift()
+      }
+    }
+
     const movePlayer = (dx: number, dy: number) => {
       const newX = player.x + dx
       const newY = player.y + dy
 
-      // 壁との衝突判定
       if (grid.value[newX]?.[newY] === WALL) {
-        return  // 壁があれば移動をキャンセル
+        addLogMessage('壁にぶつかりました！')
+        return
       }
 
       grid.value[player.x]![player.y] = '⬛'
       player.move(dx, dy)
       
       if (grid.value[player.x]![player.y] === '👾') {
-        alert('You encountered an enemy!')
+        addLogMessage('敵と遭遇！ダメージを受けました。')
         player.hp -= 1
         if (player.hp <= 0) {
+          addLogMessage('ゲームオーバー！')
           alert('Game Over!')
           window.location.reload()
         }
@@ -175,6 +196,8 @@ export default defineComponent({
     return {
       gridDisplay: displayGrid,
       grid: viewportGrid,
+      gameLog,
+      player,
     }
   },
 })
@@ -224,5 +247,50 @@ export default defineComponent({
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.game-log {
+  background-color: #1d1d1d;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 10px;
+  margin: 20px auto;
+  max-width: 40rem;
+  text-align: left;
+}
+
+.log-area {
+  display: flex;
+  gap: 20px;
+}
+
+.player-status {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 100px;
+}
+
+.player-emoji {
+  font-size: 3rem;
+  margin-bottom: 10px;
+}
+
+.player-hp {
+  color: #e0e0e0;
+  font-size: 0.9rem;
+}
+
+.log-content {
+  flex-grow: 1;
+  height: 120px;
+  overflow-y: auto;
+  padding: 10px;
+  border-left: 1px solid #333;
+}
+
+.log-content p {
+  margin: 5px 0;
+  color: #e0e0e0;
 }
 </style>
