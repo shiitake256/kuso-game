@@ -11,7 +11,9 @@
       />
     </div>
 
-    <div id="game" class="game-grid">{{ gridDisplay }}</div>
+    <div id="game" class="game-grid">
+      <span v-for="(cell, cellIndex) in grid.flat()" :key="cellIndex" class="cell">{{ cell }}</span>
+    </div>
     <p>Controls: W (Up), A (Left), S (Down), D (Right)</p>
   </div>
 </template>
@@ -128,6 +130,7 @@ export default defineComponent({
 
     return {
       gridDisplay: displayGrid,
+      grid,
       // gridDisplay: 'asdf',
     }
   },
@@ -147,14 +150,23 @@ export default defineComponent({
   border: 1px solid #333; /* ダークボーダー */
   padding: 20px;
   border-radius: 8px;
-  display: inline-block;
+  display: grid; /* グリッドレイアウト */
+  grid-template-columns: repeat(50, 2ch); /* 幅を1chで固定 */
+  grid-template-rows: repeat(50, 2ch); /* 高さも1chで固定 */
   margin: 20px auto;
   font-family: monospace;
   white-space: pre;
   max-width: fit-content;
   margin-left: auto;
   margin-right: auto;
+  /* line-height: 1ch; 縦幅を横幅に揃える */
 }
+
+/* .cell {
+  width: 1ch;
+  height: 1ch;
+  text-align: center;
+} */
 
 .game-grid-item {
   background-color: #2c2c2c; /* アイテムのダーク背景色 */
