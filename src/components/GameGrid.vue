@@ -16,7 +16,7 @@
         cell
       }}</span>
     </div>
-    <p>Controls: W (Up), A (Left), S (Down), D (Right)</p>
+    <p>Controls: K (Up), H (Left), J (Down), L (Right)</p>
   </div>
 </template>
 
@@ -151,16 +151,16 @@ export default defineComponent({
     const setupControls = () => {
       window.addEventListener('keydown', (event) => {
         switch (event.key) {
-          case 'w':
+          case 'k':
             movePlayer(-1, 0)
             break // Up
-          case 's':
+          case 'j':
             movePlayer(1, 0)
             break // Down
-          case 'a':
+          case 'h':
             movePlayer(0, -1)
             break // Left
-          case 'd':
+          case 'l':
             movePlayer(0, 1)
             break // Right
         }
