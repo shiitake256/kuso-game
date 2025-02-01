@@ -13,7 +13,7 @@
 
     <div id="game" class="game-grid">
       <span v-for="(cell, cellIndex) in grid.flat()" :key="cellIndex" class="cell">{{
-        getEmoji(cell)
+        cell
       }}</span>
     </div>
     <p>Controls: W (Up), A (Left), S (Down), D (Right)</p>
@@ -72,20 +72,11 @@ export default defineComponent({
 
     const initializeGrid = () => {
       grid.value = Array.from({ length: GRID_SIZE }, () => Array(GRID_SIZE).fill('⬛'))
-      grid.value[player.x]![player.y] = 'P'
+      grid.value[player.x]![player.y] = '😀'
       enemies.value = generateEnemies()
       for (const enemy of enemies.value) {
-        grid.value[enemy.x]![enemy.y] = 'E'
+        grid.value[enemy.x]![enemy.y] = '👾'
       }
-    }
-
-    const getEmoji = (content: string) => {
-      const emojiMap: { [key: string]: string } = {
-        P: '😀',
-        E: '👾',
-        '.': '⬛',
-      }
-      return emojiMap[content] || content
     }
 
     const displayGrid = computed(() => {
@@ -95,7 +86,7 @@ export default defineComponent({
     })
 
     const movePlayer = (dx: number, dy: number) => {
-      grid.value[player.x]![player.y] = '.'
+      grid.value[player.x]![player.y] = '⬛'
       player.move(dx, dy)
 
       if (player.x < 0) player.x = 0
@@ -103,7 +94,7 @@ export default defineComponent({
       if (player.x >= GRID_SIZE) player.x = GRID_SIZE - 1
       if (player.y >= GRID_SIZE) player.y = GRID_SIZE - 1
 
-      if (grid.value[player.x]![player.y] === 'E') {
+      if (grid.value[player.x]![player.y] === '👾') {
         alert('You encountered an enemy!')
         player.hp -= 1
         if (player.hp <= 0) {
@@ -112,7 +103,7 @@ export default defineComponent({
         }
       }
 
-      grid.value[player.x]![player.y] = 'P'
+      grid.value[player.x]![player.y] = '😀'
     }
 
     const setupControls = () => {
@@ -142,7 +133,6 @@ export default defineComponent({
     return {
       gridDisplay: displayGrid,
       grid,
-      getEmoji,
     }
   },
 })
